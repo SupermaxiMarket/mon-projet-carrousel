@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 export default function CarrouselNutritionFrance() {
@@ -66,42 +67,56 @@ export default function CarrouselNutritionFrance() {
     },
   ];
 
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    }, 4000); // Change slide every 4 seconds
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
   return (
-    <div className="flex flex-wrap justify-center items-center gap-10 p-10 bg-gray-100">
-      {slides.map((slide, i) => (
-        <motion.div
-          key={i}
-          whileHover={{ scale: 1.02 }}
-          className={`w-[1080px] h-[1080px] rounded-3xl shadow-2xl flex flex-col justify-center items-center text-center bg-gradient-to-br ${slide.bg} ${slide.color} p-12 relative`}
-        >
-          <h1 className="text-6xl font-extrabold mb-6 drop-shadow-md">{slide.title}</h1>
-          {slide.list && (
-            <ul className="text-3xl space-y-4 font-medium">
-              {slide.list.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          )}
-          {slide.subtitle && (
-            <p className="text-3xl font-medium mt-6">{slide.subtitle}</p>
-          )}
-          {slide.cta && (
-            <a
-              href={slide.cta}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute bottom-12 bg-white text-black px-8 py-4 rounded-full text-3xl font-bold shadow-lg hover:bg-gray-200 transition flex items-center gap-3"
-            >
-              Découvrir l’app <ArrowRight size={36} />
-            </a>
-          )}
-          {slide.cta && (
-            <p className="absolute bottom-4 text-xl text-white opacity-90">
-              {slide.cta}
-            </p>
-          )}
-        </motion.div>
-      ))}
+    <div className="w-full h-screen flex justify-center items-center bg-gray-100 p-4">
+      <div className="w-[1080px] h-[1080px] relative">
+        <AnimatePresence>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: 300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -300 }}
+            transition={{ duration: 0.5 }}
+            className={`absolute inset-0 w-full h-full rounded-3xl shadow-2xl flex flex-col justify-center items-center text-center bg-gradient-to-br ${slides[index].bg} ${slides[index].color} p-12`}
+          >
+            <h1 className="text-6xl font-extrabold mb-6 drop-shadow-md">{slides[index].title}</h1>
+            {slides[index].list && (
+              <ul className="text-3xl space-y-4 font-medium">
+                {slides[index].list.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            )}
+            {slides[index].subtitle && (
+              <p className="text-3xl font-medium mt-6">{slides[index].subtitle}</p>
+            )}
+            {slides[index].cta && (
+              <a
+                href={slides[index].cta}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-12 bg-white text-black px-8 py-4 rounded-full text-3xl font-bold shadow-lg hover:bg-gray-200 transition flex items-center gap-3"
+              >
+                Découvrir l’app <ArrowRight size={36} />
+              </a>
+            )}
+            {slides[index].cta && (
+              <p className="absolute bottom-4 text-xl text-white opacity-90">
+                {slides[index].cta}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
