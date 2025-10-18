@@ -9,7 +9,7 @@ export default function VideoPlayer() {
         muted
         loop
         style={{ width: '100%', height: 'auto' }}
-        src="/video.mp4"
+        src="/output.mp4"
       >
         Votre navigateur ne supporte pas la lecture de vidéos.
       </video>
